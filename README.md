@@ -37,7 +37,7 @@
 |merkleblock|:-1:|:-1:|:-1:|:-1:|
 |alert|:-1:|:-1:|:-1:|:-1:|
 
-# Testing
+# Run Tests
 
  - npm install
- - 
+ - npm test
