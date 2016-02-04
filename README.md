@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/getbitpocket/bitcoin-p2p-messages.svg?branch=master)](https://travis-ci.org/getbitpocket/bitcoin-p2p-messages)
+
 # bitcoin-p2p-protocol
 
  - ES6 implementation of the [Bitcoin p2p protocol](https://en.bitcoin.it/wiki/Protocol_documentation)
