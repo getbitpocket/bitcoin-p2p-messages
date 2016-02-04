@@ -5,8 +5,10 @@ export default class Tx {
     constructor(input) {
         if (typeof this.build === 'function' && Buffer.isBuffer(input)) {
             this.tx = this.build(input);
-        } else {
+        } else if (Buffer.isBuffer(input)) {
             this.tx = input;
+        } else {
+            throw new Error('Incorrect Transaction Data');
         }
     }
 
@@ -27,7 +29,7 @@ export default class Tx {
         return new Tx(buffer);
     }
 
-    static fromObject(message) {
-        return new Tx(message.tx);
+    static fromObject(payload) {
+        return new Tx(payload.tx);
     }
 }

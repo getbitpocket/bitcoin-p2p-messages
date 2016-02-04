@@ -12,6 +12,7 @@ export const Network = {
 
 export const BLOCK_HEADER_LENGTH = 81;
 export const PROTOCOL_HEADER_LENGTH = 24; // Bytes
+export const PROTOCOL_INV_LENGTH = 36;
 export const PROTOCOL_VERSION = 70001;
 export const PROTOCOL_NODE_NETWORK = new Buffer('0100000000000000','hex');
 export const PROTOCOL_USER_AGENT = '/BitPocket:'+VERSION+'/';
@@ -107,4 +108,13 @@ export function writeVarint(n) {
         buf.writeUInt32LE(Math.floor(n / 0x100000000), 5);
     }
     return buf;
+}
+
+export function serializeInv(inv) {
+    if (Buffer.isBuffer(inv.hash) && (typeof inv.type === 'number')) {
+        let typeBuffer = new Buffer(4);
+        typeBuffer.writeUInt32LE(inv.type,0);
+        return Buffer.concat([typeBuffer,inv.hash],PROTOCOL_INV_LENGTH);
+    }
+    throw new Error('Incorrect inv inputs');
 }

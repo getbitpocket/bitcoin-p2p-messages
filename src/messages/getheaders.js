@@ -4,26 +4,39 @@ export default class Getheaders {
 
     constructor(payload) {
         this.version   = payload.version || utils.PROTOCOL_VERSION;
-        this.hashCount = payload.hashCount || 0;
         this.hashes    = payload.hashes || [];
-        this.hashStop  = payload.hashStop || 0;
+        this.hashStop  = payload.hashStop || new Buffer(0);
     }
 
     toObject() {
         return {
             version   : this.version ,
-            hashCount : this.hashCount ,
+            hashCount : this.hashes.length ,
             hashes    : this.hashes ,
             hashStop  : this.hashStop
         };
     }
 
     toBuffer() {
-        return new Buffer();
+        let totalLength = 4, buffers = [];
+        buffers[0] = new Buffer(4);
+        buffers[0].writeInt32LE(this.version);
+
+        buffers[1] = utils.writeVarint(this.hashes.length);
+        totalLength += buffers[1].length;
+
+        for (let i = 0; i < this.hashes.length; i++) {
+            buffers.push(this.hashes[i]);
+            totalLength += buffers[buffers.length-1].length;
+        }
+
+        buffers.push(this.hashStop);
+        totalLength += this.hashStop.length;
+
+        return Buffer.concat(buffers,totalLength);
     }
 
     static fromBuffer(buffer) {
-
         let version = buffer.readUInt32LE(0);
         let hashCount = utils.readVarint(buffer,4);
         let hashStart = utils.varintSize(buffer,4) + 4;
@@ -34,11 +47,9 @@ export default class Getheaders {
             hashStart += 32;
         }
 
-        let hashStop = buffer.slice(hashStart,32);
-
+        let hashStop = buffer.slice(hashStart);
         return new Getheaders({
             version   : version ,
-            hashCount : hashCount ,
             hashes    : hashes ,
             hashStop  : hashStop
         });

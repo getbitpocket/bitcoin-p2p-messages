@@ -20,24 +20,25 @@ export default class Headers {
     }
 
     toBuffer() {
-        if (Array.isArray(this.headers)) {
-            let buffers = [];
-            let totalLength = 0;
-            buffers.push(utils.writeVarint(this.headers.length)); // count
-            totalLength += buffers[0].length;
-
-            for (let i = 0; i < this.headers.length; i++) {
-                if (typeof this.serialize === 'function' && !Buffer.isBuffer(this.headers[i])) {
-                    buffers.push(this.serialize(this.headers[i]));
-                }
-                buffers.push(this.headers[i]);
-                totalLength += buffers[buffers.length-1].length;
-            }
-
-            return Buffer.concat(buffers,totalLength);
+        if (!Array.isArray(this.headers)) {
+            return new Buffer(0);
         }
 
-        return new Buffer();
+        let buffers = [];
+        let totalLength = 0;
+        buffers.push(utils.writeVarint(this.headers.length)); // count
+        totalLength += buffers[0].length;
+
+        for (let i = 0; i < this.headers.length; i++) {
+            if (typeof this.serialize === 'function' && !Buffer.isBuffer(this.headers[i])) {
+                buffers.push(this.serialize(this.headers[i]));
+            }
+            buffers.push(this.headers[i]);
+            totalLength += buffers[buffers.length-1].length;
+        }
+
+        return Buffer.concat(buffers,totalLength);
+
     }
 
     static fromBuffer(buffer) {

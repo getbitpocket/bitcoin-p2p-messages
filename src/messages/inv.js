@@ -4,18 +4,31 @@ export default class Inv {
 
     constructor(invs) {
         this.invs  = invs || [];
-        this.count = invs.length;
     }
 
     toObject() {
         return {
-            count : this.count ,
+            count : this.invs.length ,
             invs  : this.invs
         };
     }
 
     toBuffer() {
-        return new Buffer();
+        if (!Array.isArray(this.invs)) {
+            return new Buffer(0);
+        }
+
+        let buffers = [];
+        let totalLength = 0;
+        buffers.push(utils.writeVarint(this.invs.length)); // count
+        totalLength += buffers[0].length;
+
+        for (let i = 0; i < this.invs.length; i++) {
+            buffers.push(utils.serializeInv(this.invs[i]));
+            totalLength += buffers[buffers.length-1].length;
+        }
+
+        return Buffer.concat(buffers,totalLength);
     }
 
     static fromBuffer(buffer) {
@@ -34,7 +47,7 @@ export default class Inv {
         return new Inv(invs);
     }
 
-    static fromObject() {
-        return new Inv();
+    static fromObject(payload) {
+        return new Inv(payload.invs);
     }
 }
