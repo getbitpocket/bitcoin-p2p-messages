@@ -8,7 +8,7 @@ export default class Mempool {
     }
 
     toBuffer() {
-        return new Buffer();
+        return new Buffer(0);
     }
 
     static fromBuffer() {
