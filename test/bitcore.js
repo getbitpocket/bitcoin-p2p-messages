@@ -19,7 +19,7 @@ describe('Testing Messages against Bitcore', function() {
 
     });
 
-    it('Testing selected messages', function() {
+    xit('Testing selected messages', function() {
         data.forEach(function(item) {
             let message = Message.fromString(item.message);
 

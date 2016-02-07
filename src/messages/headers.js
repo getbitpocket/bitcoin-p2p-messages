@@ -38,7 +38,6 @@ export default class Headers {
         }
 
         return Buffer.concat(buffers,totalLength);
-
     }
 
     static fromBuffer(buffer) {

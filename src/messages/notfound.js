@@ -1,6 +1,6 @@
 import * as utils from '../utils'
 
-export default class Inv {
+export default class Notfound {
 
     constructor(invs) {
         this.invs  = invs || [];
@@ -44,10 +44,10 @@ export default class Inv {
             startInvs += 36;
         }
 
-        return new Inv(invs);
+        return new Notfound(invs);
     }
 
     static fromObject(payload) {
-        return new Inv(payload.inventory);
+        return new Notfound(payload.inventory);
     }
 }

@@ -1,6 +1,7 @@
 "use strict";
 
 import crypto from 'crypto'
+import BN from 'bn.js'
 
 export const VERSION = require('../package.json').version;
 
@@ -11,11 +12,22 @@ export const Network = {
 };
 
 export const BLOCK_HEADER_LENGTH = 81;
+
 export const PROTOCOL_HEADER_LENGTH = 24; // Bytes
 export const PROTOCOL_INV_LENGTH = 36;
 export const PROTOCOL_VERSION = 70001;
 export const PROTOCOL_NODE_NETWORK = new Buffer('0100000000000000','hex');
 export const PROTOCOL_USER_AGENT = '/BitPocket:'+VERSION+'/';
+export const PROTOCOL_ADDR_LENGTH = 30; // including timestamp
+
+export const PROTOCOL_REJECT_CCODE_MALFORMED = 0x01;
+export const PROTOCOL_REJECT_CCODE_INVALID = 0x10;
+export const PROTOCOL_REJECT_CCODE_OBSOLETE = 0x11;
+export const PROTOCOL_REJECT_CCODE_DUPLICATE = 0x12;
+export const PROTOCOL_REJECT_CCODE_NONSTANDARD = 0x40;
+export const PROTOCOL_REJECT_CCODE_DUST = 0x41;
+export const PROTOCOL_REJECT_CCODE_INSUFFICIENTEFEE = 0x42;
+export const PROTOCOL_REJECT_CCODE_CHECKPOINT = 0x43;
 
 export function sha256(input) {
     let hash = crypto.createHash('sha256');
@@ -27,8 +39,12 @@ export function sha256x2(input) {
     return sha256(sha256(input));
 }
 
-export function generateNonce() {
-    return crypto.randomBytes(8);
+export function generateRandomBuffer(size=8) {
+    return crypto.randomBytes(size);
+}
+
+export function generateRandomBN() {
+    return new BN(generateRandomBuffer(),'16','lt');
 }
 
 export function isNonce(buffer) {
@@ -52,7 +68,21 @@ export function getNetwork(magic) {
     throw new Error('Incorrect magic number / network');
 }
 
+// TODO: reomve instead of varintLength
 export function varintSize(buffer,start=0) {
+    switch (buffer.readUInt8(start)) {
+        case 0xFD: // UInt8 UInt16LE
+            return 3;
+        case 0xFE: // UInt8 UInt32LE
+            return 5;
+        case 0xFF:// UInt8 UInt64LE
+            return 9;
+        default:
+            return 1;
+    }
+}
+
+export function varintLength(buffer,start=0) {
     switch (buffer.readUInt8(start)) {
         case 0xFD: // UInt8 UInt16LE
             return 3;
@@ -108,6 +138,104 @@ export function writeVarint(n) {
         buf.writeUInt32LE(Math.floor(n / 0x100000000), 5);
     }
     return buf;
+}
+
+export function varstringLength(input) {
+    let stringStart  = varintLength(input);
+    let stringLength = readVarint(input);
+    return stringStart + stringLength;
+}
+
+export function readVarstring(input,encoding='ascii') {
+    let stringStart  = varintLength(input);
+    let stringLength = readVarint(input);
+    return input.slice(stringStart,stringLength+stringStart).toString(encoding);
+}
+
+export function writeVarstring(input,encoding='ascii') {
+    let varIntBuffer = writeVarint(input.length);
+    let varIntLength = varintLength(varIntBuffer);
+    return Buffer.concat([varIntBuffer,new Buffer(input,encoding)],varIntLength+input.length);
+}
+
+export function readUInt64LE(input) {
+    if (Buffer.isBuffer(input)) {
+        input = input.slice(0,8).toString('hex');
+    }
+    if (typeof input === 'string' && input.length === 16) {
+        return new BN(input,16,'le');
+    }
+    throw new Error('Incorrect input for reading 64Bit Integer');
+}
+
+export function read64BitTimestamp(input) {
+    return new Date(readUInt64LE(input).toNumber() * 1000);
+}
+
+export function readIP(input) {
+    let ipv6 = [];
+    let ipv4 = [];
+    for (let a = 0; a < 16; a+=2) {
+        var twoBytes = input.slice(a,a+2);
+        ipv6.push(twoBytes.toString('hex'));
+        if (a >= 12) {
+            ipv4.push(twoBytes[0]);
+            ipv4.push(twoBytes[1]);
+        }
+    }
+    ipv6 = ipv6.join(':');
+    ipv4 = ipv4.join('.');
+    return {
+        v6: ipv6,
+        v4: ipv4
+    };
+}
+
+export function readNetworkAddress(input) {
+    let start = 0, address = {};
+    if (input.length === PROTOCOL_ADDR_LENGTH)  { // timestamp included
+        address.timestamp = new Date(input.readUInt32LE(0) * 1000);
+        start = 4;
+    }
+    address.services = readUInt64LE(input.slice(start,start+8));
+    address.ip = readIP(input.slice(start+8,start+24));
+    address.port = input.readUInt16BE(start+24);
+
+    return address;
+}
+
+export function writeIP(ip) {
+    if (typeof ip.v6 === 'string' && ip.v6.length === 39) { // TODO: maybe support all possible ipv6 variants
+        return new Buffer(ip.v6.replace(/:/g,''),'hex');
+    } else if (typeof ip.v4 === 'string' && (ip.v4.split('.').length === 4)) {
+        let buffer = new Buffer(16);
+
+        // see dual-stack: https://en.wikipedia.org/wiki/IPv6#IPv4-mapped_IPv6_addresses
+        buffer[10] = 255;
+        buffer[11] = 255;
+        ip.v4.split('.').forEach(function(byte,index) {
+            buffer[index+12] = parseInt(byte);
+        });
+        return buffer;
+    }
+}
+
+export function writeNetworkAddress(address) {
+    let totalLength = PROTOCOL_ADDR_LENGTH - 4;
+    let buffers = [];
+
+    if (address.timestamp && (address.timestamp instanceof Date)) {
+        buffers.push(new Buffer(4));
+        buffers[buffers.length-1].writeUInt32LE(Math.round(address.timestamp.getTime() / 1000));
+        totalLength = PROTOCOL_ADDR_LENGTH;
+    }
+
+    buffers.push(address.services.toArrayLike(Buffer,'le',8)); // BN dependency
+    buffers.push(writeIP(address.ip));
+
+    let buffer = Buffer.concat(buffers,totalLength);
+    buffer.writeUInt16BE(address.port,totalLength-2);
+    return buffer;
 }
 
 export function serializeInv(inv) {

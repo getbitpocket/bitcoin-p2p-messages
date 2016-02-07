@@ -8,7 +8,7 @@ export default class Getaddr {
     }
 
     toBuffer() {
-        return new Buffer();
+        return new Buffer(0);
     }
 
     static fromBuffer() {

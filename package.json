@@ -29,6 +29,6 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "bigi": "^1.4.1"
+    "bn.js": "^4.10.1"
   }
 }
