@@ -56,10 +56,7 @@ export default class Addr {
     }
 
     static fromObject(payload) {
-        if (!Array.isArray(payload.addresses)) {
-            payload.addresses = [];
-        }
-
+        payload.address = utils.checkArrayInput(payload.address);
         return new Addr(payload.addresses);
     }
 }

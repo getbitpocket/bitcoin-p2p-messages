@@ -33,7 +33,7 @@ export default class Headers {
             if (typeof this.serialize === 'function' && !Buffer.isBuffer(this.headers[i])) {
                 buffers.push(this.serialize(this.headers[i]));
             }
-            buffers.push(this.headers[i]);
+            buffers.push(utils.checkBufferInput(this.headers[i]));
             totalLength += buffers[buffers.length-1].length;
         }
 
@@ -54,6 +54,7 @@ export default class Headers {
     }
 
     static fromObject(message) {
+        message.headers = utils.checkArrayInput(message.headers);
         return new Headers(message.headers);
     }
 }

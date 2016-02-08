@@ -30,6 +30,7 @@ export default class Tx {
     }
 
     static fromObject(payload) {
+        payload.tx = utils.checkBufferInput(payload.tx);
         return new Tx(payload.tx);
     }
 }

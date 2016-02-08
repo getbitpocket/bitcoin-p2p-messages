@@ -66,5 +66,44 @@ describe('Testing Utility Functions', function() {
         chai.expect(bufferV4.toString('hex')).to.equal('00000000000000000000ffff0a000001');
     });
 
+    it('check BN inputs', function() {
+        let i1 = utils.checkBigNumberInput(123);
+        chai.expect(i1.toNumber()).to.equal(123);
+
+        let i2 = utils.checkBigNumberInput(new BN('10',10));
+        chai.expect(i2.toNumber()).to.equal(10);
+
+        let i3 = utils.checkBigNumberInput(undefined,new BN(10));
+        chai.expect(i3.toNumber()).to.equal(10);
+
+        let i4 = utils.checkBigNumberInput(undefined,undefined);
+        chai.expect(i4.toNumber()).to.equal(0);
+    });
+
+    it('check buffer inputs', function() {
+        let i1 = utils.checkBufferInput('aabbcc');
+        chai.expect(i1).to.deep.equal(new Buffer('aabbcc','hex'));
+
+        let i2 = utils.checkBufferInput(new Buffer('aabbcc','hex'));
+        chai.expect(i2).to.deep.equal(new Buffer('aabbcc','hex'));
+
+        let i3 = utils.checkBufferInput(23423);
+        chai.expect(i3).to.deep.equal(new Buffer(0));
+
+        let i4 = utils.checkBufferInput(23423,new Buffer('1234','hex'));
+        chai.expect(i4).to.deep.equal(new Buffer('1234','hex'));
+    });
+
+    it('check array inputs', function() {
+        let i1 = utils.checkArrayInput([3,4]);
+        chai.expect(i1).to.include.members([3,4]);
+
+        let i2 = utils.checkArrayInput(234234,[3]);
+        chai.expect(i2).to.include.members([3]);
+
+        let i3 = utils.checkArrayInput(234234);
+        chai.expect(i3).to.include.members([]);
+    });
+
 });
 

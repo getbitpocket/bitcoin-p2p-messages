@@ -4,8 +4,8 @@ export default class Getheaders {
 
     constructor(payload) {
         this.version   = payload.version || utils.PROTOCOL_VERSION;
-        this.hashes    = payload.hashes || [];
-        this.hashStop  = payload.hashStop || new Buffer(0);
+        this.hashes    = utils.checkArrayInput(payload.hashes);
+        this.hashStop  = utils.checkBufferInput(payload.hashStop,new Buffer(0));
     }
 
     toObject() {
@@ -26,7 +26,7 @@ export default class Getheaders {
         totalLength += buffers[1].length;
 
         for (let i = 0; i < this.hashes.length; i++) {
-            buffers.push(this.hashes[i]);
+            buffers.push(utils.checkBufferInput(this.hashes[i]));
             totalLength += buffers[buffers.length-1].length;
         }
 

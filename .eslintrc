@@ -1,0 +1,16 @@
+{
+  "ecmaFeatures": {
+    "blockBindings": true,
+    "forOf": true ,
+    "modules" : true ,
+    "classes" : true ,
+    "destructuring" : true ,
+    "defaultParams" : true
+  },
+  "rules": {
+    // "semi": 2
+    "valid-typeof" : 2 ,
+    "indent" : [2, 4, {"SwitchCase": 1}] ,
+    "no-mixed-spaces-and-tabs": [2, "smart-tabs"]
+  }
+}

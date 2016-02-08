@@ -60,7 +60,7 @@ export default class Filterload {
 
     static fromObject(payload) {
         let options = {
-            filter : payload.filter || [] ,
+            filter : utils.checkArrayInput(payload.filter) ,
             nHashFuncs : payload.nHashFuncs || 0 ,
             nTweak : payload.nTweak || 0 ,
             nFlags : payload.nFlags || 0

@@ -30,6 +30,7 @@ export default class Block {
     }
 
     static fromObject(payload) {
+        payload.block = utils.checkBufferInput(payload.block);
         return new Block(payload.block);
     }
 }

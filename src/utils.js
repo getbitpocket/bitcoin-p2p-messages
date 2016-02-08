@@ -246,3 +246,28 @@ export function serializeInv(inv) {
     }
     throw new Error('Incorrect inv inputs');
 }
+
+export function checkBigNumberInput(input,defaultValue) {
+    if (input instanceof BN) {
+        return input;
+    } else if (typeof input === 'number') {
+        return new BN(input);
+    }
+    return defaultValue || new BN(0);
+}
+
+export function checkBufferInput(input,defaultValue) {
+    if (typeof input === 'string') {
+        return new Buffer(input,'hex');
+    } else if (Buffer.isBuffer(input)) {
+        return input;
+    }
+    return Buffer.isBuffer(defaultValue) ? defaultValue : new Buffer(0);
+}
+
+export function checkArrayInput(input,defaultValue) {
+    if (!Array.isArray(input)) {
+        return defaultValue || [];
+    }
+    return input;
+}

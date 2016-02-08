@@ -6,7 +6,6 @@ export default class Version {
         for (var key in options) {
             if (options.hasOwnProperty(key)) {
                 this[key] = options[key];
-                // console.log(key + " " + options[key]);
             }
         }
     }
@@ -75,10 +74,10 @@ export default class Version {
 
     static fromObject(payload) {
         let options = {
-            version     : payload.version     || utils.PROTOCOL_VERSION ,
-            services    : payload.services    || utils.PROTOCOL_NODE_NETWORK ,
-            nonce       : payload.nonce       || utils.generateRandomBuffer() ,
-            timestamp   : payload.timestamp   || new Date() ,
+            version     : payload.version || utils.PROTOCOL_VERSION ,
+            services    : payload.services || utils.PROTOCOL_NODE_NETWORK ,
+            nonce       : payload.nonce || utils.generateRandomBuffer() ,
+            timestamp   : payload.timestamp || new Date() ,
             receiveAddress : payload.receiveAddress ,
             fromAddress : payload.fromAddress ,
             userAgent   : payload.userAgent   || utils.PROTOCOL_USER_AGENT ,

@@ -3,7 +3,7 @@ import * as utils from '../utils'
 export default class Getdata {
 
     constructor(invs) {
-        this.invs  = invs || [];
+        this.invs  = utils.checkArrayInput(invs);
     }
 
     toObject() {

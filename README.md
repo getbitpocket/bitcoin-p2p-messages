@@ -14,8 +14,8 @@
  - Build: From Buffer/Hex To Json/Object
  - Serialize: From Json/Object To Buffer/Hex
  - fromObject datatypes:
-    - Hash: either as string or buffer
-    - BigNumber: either as Buffer or BN
+    - Hash: string or buffer
+    - BigNumber: BN or number
     - timestamp: date object
 
 # Implementation status

@@ -6,6 +6,11 @@ import Message from '../src/message'
 
 describe('Testing Message Transformations', function() {
 
+    before(function() {
+        Message.setMessageBuilder('tx',undefined);
+        Message.setMessageBuilder('headers',undefined);
+    });
+
     it('Message Transformation: hex -> json', function() {
         data.forEach(function(item) {
             let message = Message.fromString(item.message);
