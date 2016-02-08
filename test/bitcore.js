@@ -8,7 +8,7 @@ import * as bitcore from 'bitcore-lib'
 describe('Testing Messages against Bitcore', function() {
 
     before(function() {
-
+/*
         Message.setMessageBuilder('tx',function(buffer) {
             return new bitcore.Transaction(buffer);
         });
@@ -16,7 +16,7 @@ describe('Testing Messages against Bitcore', function() {
         Message.setMessageBuilder('headers',function(buffer) {
             return new bitcore.BlockHeader(buffer);
         });
-
+*/
     });
 
     xit('Testing selected messages', function() {

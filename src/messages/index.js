@@ -6,11 +6,18 @@ import Mempool from './mempool'
 import Getheaders from './getheaders'
 import Inv from './inv'
 import Tx from './tx'
+import Block from './block'
+import Merkleblock from './merkleblock'
 import Headers from './headers'
 import Addr from './addr'
 import Getaddr from './getaddr'
 import Notfound from './notfound'
 import Reject from './reject'
+import Getdata from './getdata'
+import Getblocks from './getblocks'
+import Filterclear from './filterclear'
+import Filteradd from './filteradd'
+import Filterload from './filterload'
 
 export default {
     'ping'    : Ping ,
@@ -21,9 +28,16 @@ export default {
     'getheaders' : Getheaders ,
     'inv' : Inv ,
     'tx' : Tx ,
+    'block' : Block ,
     'headers' : Headers ,
     'addr' : Addr ,
     'getaddr' : Getaddr ,
     'notfound' : Notfound ,
-    'reject' : Reject
+    'reject' : Reject ,
+    'filterclear' : Filterclear ,
+    'filteradd' : Filteradd ,
+    'filterload' : Filterload ,
+    'getdata' : Getdata ,
+    'getblocks' : Getblocks ,
+    'merkleblock' : Merkleblock
 }
