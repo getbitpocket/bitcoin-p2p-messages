@@ -16,8 +16,8 @@ gulp.task('lint', function () {
 		.pipe(esl.failAfterError());
 });
 
-gulp.task('default',['lint'],function() {
-	return gulp.src("src/*.js")
+gulp.task('build',['test'],function() {
+	return gulp.src("src/**/*.js")
 		.pipe(babel())
 		.pipe(gulp.dest("dist"));
 });
@@ -29,10 +29,12 @@ gulp.task('test',['lint'],function() {
 	}).start();
 });
 
-gulp.task('version-bump',['lint'],function() {
+gulp.task('version-bump',function() {
 	gulp.src('./package.json')
 		.pipe(bump())
 		.pipe(gulp.dest('./'))
-        .pipe(git.commit('bumps package version: ' + require('./package.json').version))
+        .pipe(git.commit('bumps package version'))
         .pipe(tag());
 });
+
+gulp.task('default',['build']);

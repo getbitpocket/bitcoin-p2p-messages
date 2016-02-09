@@ -25,6 +25,7 @@ export default class Ping {
     }
 
     static fromObject(body) {
+        body = body || {};
         body.nonce = body.nonce || utils.generateRandomBuffer();
         return new Ping(body.nonce);
     }

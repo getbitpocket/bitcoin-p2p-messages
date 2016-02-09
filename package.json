@@ -9,7 +9,7 @@
     "commands",
     "p2p-network"
   ],
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "./node_modules/gulp/bin/gulp.js test",
     "prepublish": "./node_modules/gulp/bin/gulp.js"
