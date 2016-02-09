@@ -2,7 +2,10 @@
 
 var gulp  = require('gulp');
 var esl   = require('gulp-eslint');
+var git   = require('gulp-git');
+var tag   = require('gulp-tag-version');
 var babel = require('gulp-babel');
+var bump  = require('gulp-bump');
 var mocha = require('mocha');
 var KarmaServer = require('karma').Server;
 
@@ -24,4 +27,12 @@ gulp.task('test',['lint'],function() {
 		configFile: __dirname + '/karma.conf.js',
 		singleRun: true
 	}).start();
+});
+
+gulp.task('version-bump',['lint'],function() {
+	gulp.src('./package.json')
+		.pipe(bump())
+		.pipe(gulp.dest('./'))
+        .pipe(git.commit('bumps package version: ' + require('./package.json').version))
+        .pipe(tag());
 });
