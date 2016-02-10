@@ -18,6 +18,7 @@ import Getblocks from './getblocks'
 import Filterclear from './filterclear'
 import Filteradd from './filteradd'
 import Filterload from './filterload'
+import Sendheaders from './sendheaders'
 
 export default {
     'ping'    : Ping ,
@@ -39,5 +40,6 @@ export default {
     'filterload' : Filterload ,
     'getdata' : Getdata ,
     'getblocks' : Getblocks ,
-    'merkleblock' : Merkleblock
+    'merkleblock' : Merkleblock ,
+    'sendheaders' : Sendheaders
 }

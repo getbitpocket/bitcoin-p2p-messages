@@ -363,6 +363,14 @@ export default [
                 ]
             }
         }
+    },
+    {
+        message : 'f9beb4d973656e646865616465727300000000005df6e0e2' ,
+        json    : {
+            network : 'mainnet' ,
+            command : 'sendheaders' ,
+            payload : {}
+        }
     }
     /*
 
