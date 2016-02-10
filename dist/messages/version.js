@@ -98,8 +98,8 @@ var Version = function () {
                 services: payload.services || utils.PROTOCOL_NODE_NETWORK,
                 nonce: payload.nonce || utils.generateRandomBuffer(),
                 timestamp: payload.timestamp || new Date(),
-                receiveAddress: payload.receiveAddress,
-                fromAddress: payload.fromAddress,
+                receiveAddress: utils.checkNetworkAddressInput(payload.receiveAddress),
+                fromAddress: utils.checkNetworkAddressInput(payload.fromAddress),
                 userAgent: payload.userAgent || utils.PROTOCOL_USER_AGENT,
                 startHeight: payload.startHeight || 0,
                 relay: payload.relay === false ? false : true

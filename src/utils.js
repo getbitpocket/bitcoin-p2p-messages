@@ -247,6 +247,27 @@ export function serializeInv(inv) {
     throw new Error('Incorrect inv inputs');
 }
 
+export function checkNetworkAddressInput(input,defaultValue) {
+    input = input || {};
+    input.services = checkBigNumberInput(input.services,new BN(1));
+    input.ip = checkIpInput(input.ip);
+    input.port = input.port || 8333;
+    return input;
+}
+
+export function checkIpInput(input,defaultValue) {
+    defaultValue = defaultValue || {
+        v4 : '127.0.0.1' ,
+        v6 : '0000:0000:0000:0000:0000:ffff:7f00:0001'
+    };
+
+    if (input && (input.v4 || input.v6)) {
+        return input;
+    }
+
+    return defaultValue;
+}
+
 export function checkBigNumberInput(input,defaultValue) {
     if (input instanceof BN) {
         return input;

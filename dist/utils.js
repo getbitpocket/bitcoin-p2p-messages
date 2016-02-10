@@ -26,6 +26,8 @@ exports.readNetworkAddress = readNetworkAddress;
 exports.writeIP = writeIP;
 exports.writeNetworkAddress = writeNetworkAddress;
 exports.serializeInv = serializeInv;
+exports.checkNetworkAddressInput = checkNetworkAddressInput;
+exports.checkIpInput = checkIpInput;
 exports.checkBigNumberInput = checkBigNumberInput;
 exports.checkBufferInput = checkBufferInput;
 exports.checkArrayInput = checkArrayInput;
@@ -309,6 +311,27 @@ function serializeInv(inv) {
         return Buffer.concat([typeBuffer, inv.hash], PROTOCOL_INV_LENGTH);
     }
     throw new Error('Incorrect inv inputs');
+}
+
+function checkNetworkAddressInput(input, defaultValue) {
+    input = input || {};
+    input.services = checkBigNumberInput(input.services, new _bn2.default(1));
+    input.ip = checkIpInput(input.ip);
+    input.port = input.port || 8333;
+    return input;
+}
+
+function checkIpInput(input, defaultValue) {
+    defaultValue = defaultValue || {
+        v4: '127.0.0.1',
+        v6: '0000:0000:0000:0000:0000:ffff:7f00:0001'
+    };
+
+    if (input && (input.v4 || input.v6)) {
+        return input;
+    }
+
+    return defaultValue;
 }
 
 function checkBigNumberInput(input, defaultValue) {
