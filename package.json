@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-p2p-messages",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "implementation of the bitcoin p2p messages",
   "keywords": [
     "bitcoin",
