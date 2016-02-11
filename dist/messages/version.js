@@ -95,8 +95,8 @@ var Version = function () {
         value: function fromObject(payload) {
             var options = {
                 version: payload.version || utils.PROTOCOL_VERSION,
-                services: payload.services || utils.PROTOCOL_NODE_NETWORK,
-                nonce: payload.nonce || utils.generateRandomBuffer(),
+                services: utils.checkBigNumberInput(payload.service, utils.PROTOCOL_NODE_NETWORK),
+                nonce: utils.checkBigNumberInput(payload.nonce, utils.generateRandomBN()),
                 timestamp: payload.timestamp || new Date(),
                 receiveAddress: utils.checkNetworkAddressInput(payload.receiveAddress),
                 fromAddress: utils.checkNetworkAddressInput(payload.fromAddress),

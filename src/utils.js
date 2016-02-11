@@ -16,7 +16,7 @@ export const BLOCK_HEADER_LENGTH = 81;
 export const PROTOCOL_HEADER_LENGTH = 24; // Bytes
 export const PROTOCOL_INV_LENGTH = 36;
 export const PROTOCOL_VERSION = 70001;
-export const PROTOCOL_NODE_NETWORK = new Buffer('0100000000000000','hex');
+export const PROTOCOL_NODE_NETWORK = new BN('0100000000000000',16,'le'); // TODO: new BN(1)
 export const PROTOCOL_USER_AGENT = '/BitPocket:'+VERSION+'/';
 export const PROTOCOL_ADDR_LENGTH = 30; // including timestamp
 
@@ -43,8 +43,8 @@ export function generateRandomBuffer(size=8) {
     return crypto.randomBytes(size);
 }
 
-export function generateRandomBN() {
-    return new BN(generateRandomBuffer(),'16','lt');
+export function generateRandomBN(size=8) {
+    return new BN(generateRandomBuffer(size),'16','le');
 }
 
 export function isNonce(buffer) {

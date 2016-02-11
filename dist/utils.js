@@ -55,7 +55,7 @@ var BLOCK_HEADER_LENGTH = exports.BLOCK_HEADER_LENGTH = 81;
 var PROTOCOL_HEADER_LENGTH = exports.PROTOCOL_HEADER_LENGTH = 24; // Bytes
 var PROTOCOL_INV_LENGTH = exports.PROTOCOL_INV_LENGTH = 36;
 var PROTOCOL_VERSION = exports.PROTOCOL_VERSION = 70001;
-var PROTOCOL_NODE_NETWORK = exports.PROTOCOL_NODE_NETWORK = new Buffer('0100000000000000', 'hex');
+var PROTOCOL_NODE_NETWORK = exports.PROTOCOL_NODE_NETWORK = new _bn2.default('0100000000000000', 16, 'le'); // TODO: new BN(1)
 var PROTOCOL_USER_AGENT = exports.PROTOCOL_USER_AGENT = '/BitPocket:' + VERSION + '/';
 var PROTOCOL_ADDR_LENGTH = exports.PROTOCOL_ADDR_LENGTH = 30; // including timestamp
 
@@ -85,7 +85,9 @@ function generateRandomBuffer() {
 }
 
 function generateRandomBN() {
-    return new _bn2.default(generateRandomBuffer(), '16', 'lt');
+    var size = arguments.length <= 0 || arguments[0] === undefined ? 8 : arguments[0];
+
+    return new _bn2.default(generateRandomBuffer(size), '16', 'le');
 }
 
 function isNonce(buffer) {
