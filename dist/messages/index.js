@@ -84,6 +84,10 @@ var _filterload = require('./filterload');
 
 var _filterload2 = _interopRequireDefault(_filterload);
 
+var _sendheaders = require('./sendheaders');
+
+var _sendheaders2 = _interopRequireDefault(_sendheaders);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
@@ -106,5 +110,6 @@ exports.default = {
     'filterload': _filterload2.default,
     'getdata': _getdata2.default,
     'getblocks': _getblocks2.default,
-    'merkleblock': _merkleblock2.default
+    'merkleblock': _merkleblock2.default,
+    'sendheaders': _sendheaders2.default
 };
