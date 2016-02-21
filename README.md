@@ -49,3 +49,7 @@
 
  - npm install
  - npm test
+
+# Contribute
+
+Contributions are always welcome. Open issues are avaialbe: [Issues](https://github.com/getbitpocket/bitcoin-p2p-messages/issues)
